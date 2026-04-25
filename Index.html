@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>For My Person ❤️</title>
+    <style>
+        :root {
+            --accent-pink: #ff8fa3;
+            --soft-white: #fef9fb;
+            --overlay: rgba(0, 0, 0, 0.5);
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            font-family: 'Georgia', serif;
+            background-color: #1a1a1a;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Background Image with Blur */
+        .bg-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* MAINE YE RAW LINK UPDATE KAR DIYA HAI */
+            background: url('gf.jpg') no-repeat center center;
+            background-size: cover;
+            filter: blur(5px) brightness(0.6);
+            z-index: -1;
+            transform: scale(1.1); /* To hide blur edges */
+        }
+
+        /* Main Container */
+        .container {
+            text-align: center;
+            padding: 40px;
+            background: var(--overlay);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 85%;
+            max-width: 450px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            z-index: 2;
+        }
+
+        /* Thought Display */
+        #thought-display {
+            font-size: 1.6rem;
+            color: var(--soft-white);
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+            transition: all 0.5s ease;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            line-height: 1.4;
+        }
+
+        /* Button Style */
+        button {
+            background: var(--accent-pink);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 143, 163, 0.4);
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            background: #ff4d6d;
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        /* Audio Control Icon */
+        #music-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+
+        /* Floating Hearts Animation */
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+
+        .heart {
+            position: fixed;
+            color: var(--accent-pink);
+            font-size: 1.5rem;
+            user-select: none;
+            z-index: 1;
+            animation: float linear infinite;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="bg-image"></div>
+    
+    <div class="container">
+        <div id="thought-display">Tap the button to see what I feel...</div>
+        <button id="next-thought-btn">EVERY CLICK IS FOR YOU</button>
+    </div>
+
+    <audio id="myAudio" loop>
+        <source src="music.mp3" type="audio/mpeg">
+    </audio>
+
+    <button id="music-toggle">🔇</button>
+
+    <script>
+        const thoughts = [
+            "She makes me feel lucky",
+            "Her smile changes my day",
+            "Just thinking about her makes me smile",
+            "She's the best part of my life",
+            "My love for her is endless",
+            "I'm grateful for every moment with her",
+            "She is my safe place ❤️"
+        ];
+
+        let thoughtIndex = 0;
+        const display = document.getElementById("thought-display");
+        const btn = document.getElementById("next-thought-btn");
+        const audio = document.getElementById("myAudio");
+        const musicBtn = document.getElementById("music-toggle");
+        let firstClick = true;
+
+        // Function to change thought
+        function changeThought() {
+            display.style.opacity = 0;
+            setTimeout(() => {
+                display.innerText = thoughts[thoughtIndex];
+                display.style.opacity = 1;
+                thoughtIndex = (thoughtIndex + 1) % thoughts.length;
+            }, 500);
+            
+            createHeart();
+
+            // Play music on first interaction
+            if (firstClick) {
+                audio.play().then(() => {
+                    musicBtn.innerText = "🔊";
+                }).catch(error => {
+                    console.log("Audio couldn't start automatically.");
+                });
+                firstClick = false;
+            }
+        }
+
+        // Floating Hearts
+        function createHeart() {
+            const heart = document.createElement("div");
+            heart.classList.add("heart");
+            heart.innerText = "❤️";
+            heart.style.left = Math.random() * 100 + "vw";
+            heart.style.animationDuration = Math.random() * 2 + 3 + "s";
+            document.body.appendChild(heart);
+            
+            setTimeout(() => { heart.remove(); }, 5000);
+        }
+
+        // Music Toggle
+        musicBtn.addEventListener("click", () => {
+            if (audio.paused) {
+                audio.play();
+                musicBtn.innerText = "🔊";
+            } else {
+                audio.pause();
+                musicBtn.innerText = "🔇";
+            }
+        });
+
+        btn.addEventListener("click", changeThought);
+    </script>
+</body>
+</html>
